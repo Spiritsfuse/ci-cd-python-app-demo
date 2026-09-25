@@ -167,20 +167,20 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: nensiravaliya28
+          username: spiritsfuse
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and tag image
         run: |
           docker build \
-            -t nensiravaliya28/hey-cicd:${{ github.sha }} \
-            -t nensiravaliya28/hey-cicd:latest \
+            -t spiritsfuse/python-web:${{ github.sha }} \
+            -t spiritsfuse/python-web:latest \
             .
 
       - name: Push image
         run: |
-          docker push nensiravaliya28/hey-cicd:${{ github.sha }}
-          docker push nensiravaliya28/hey-cicd:latest
+          docker push spiritsfuse/python-web:${{ github.sha }}
+          docker push spiritsfuse/python-web:latest
 
 
   # ========================================
@@ -207,8 +207,8 @@ jobs:
 
       - name: Update deployment with new image tag
         run: |
-          # Replace '__IMAGE_TAG__' placeholder with the specific git sha we just pushed
-          sed -i "s|__IMAGE_TAG__|${{ github.sha }}|g" k8s/deployment.yaml
+          # Update image tag with the specific git sha we just pushed
+          sed -i "s|spiritsfuse/python-web:.*|spiritsfuse/python-web:${{ github.sha }}|g" k8s/deployment.yaml
 
       - name: Deploy to Kubernetes
         run: |
